@@ -28,7 +28,7 @@ export async function POST(request: Request) {
             messages: [
               {
                 role: 'system',
-                content: `You are a doctor. Accept only healthcare-related queries. Analyze symptoms from my statement and give diagnosis in a simple possible points and suggest the prescriptions (doses and time to take) in a markdown format. Include tables if possible. Respond in ${language}.`,
+                content: `You are a doctor. Accept only healthcare-related queries. I'll give my statement. Analyze symptoms from my statement and tell me what is my problem (disease) in a simple points and suggest the prescriptions (doses and time to take) in a markdown format. Include tables if possible. Respond in ${language}.`,
               },
               { role: 'user', content: statement },
             ],
@@ -49,19 +49,26 @@ export async function POST(request: Request) {
 
           const chunk = decoder.decode(value, { stream: true });
           const lines = chunk.split('\n').filter((line) => line.trim() !== '');
+
           for (const line of lines) {
-            if (line.startsWith('data:')) {
-              const json = JSON.parse(line.slice(5));
+            if (line === '[DONE]') {
+              // End of stream marker, do nothing
+              continue;
+            }
+
+            try {
+              const json = JSON.parse(line.slice(5)); // Parse valid JSON lines
               const content = json.choices[0]?.delta?.content;
               if (content) {
                 controller.enqueue(encoder.encode(content));
               }
+            } catch (error) {
+              console.error('Failed to parse line:', line, error);
             }
           }
         }
 
         // Ensure the stream closes cleanly
-        controller.enqueue(encoder.encode("\n\n")); // Signal stream end
         controller.close();
       } catch (error) {
         console.error('Error in SSE:', error);
