@@ -1,4 +1,3 @@
-import Image from "next/image";
 import DoctorAssistant from "./components/DoctorAssistant";
 
 export default function Home() {
