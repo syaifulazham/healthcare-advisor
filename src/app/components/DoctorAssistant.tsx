@@ -15,7 +15,7 @@ const DoctorAssistant = () => {
   const [language, setLanguage] = useState('English');
   const [error, setError] = useState<string | null>(null);
 
-  const languages = ['Bahasa Malaysia', 'Bahasa Indonesia', 'English', 'Mandarin', 'Tamil'];
+  const languages = ['Bahasa Malaysia', 'Bahasa Indonesia', 'English', 'Mandarin', 'Tamil', 'Arabic'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
