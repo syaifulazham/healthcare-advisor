@@ -29,26 +29,31 @@ const DoctorAssistant = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ statement: inputText, language: language }),
+        body: JSON.stringify({ statement: inputText, language }),
       });
-
+    
       if (!response.body) {
         throw new Error('No response body from the server.');
       }
-
+    
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-
+    
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
+    
         const chunk = decoder.decode(value, { stream: true });
-        setMarkdown((prev) => prev + chunk); // Append progressively
+        setMarkdown((prev) => prev + chunk);
       }
-    } catch (err: any) {
-      console.error('Error during streaming:', err);
-      //setError('A network error occurred. Please try again.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('Error during streaming:', err.message);
+        setError('A network error occurred. Please try again.');
+      } else {
+        console.error('Unexpected error:', err);
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

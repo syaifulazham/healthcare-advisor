@@ -35,7 +35,7 @@ const SymptomChecker = ({ onReset }: { onReset: () => void }) => {
   } else if (step === 0 && prescription === null) {
     return (
       <div className="flex flex-col w-full">
-        <p>You're good to go! Continue your trip.</p>
+        <p>You&#39;re good to go! Continue your trip.</p>
         <button onClick={reset} className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 ml-auto">
           Reset
         </button>
