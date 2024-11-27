@@ -1,7 +1,7 @@
 // app/advisor/page.tsx
 'use client';
 import { useState } from 'react';
-import SymptomChecker from '../components/SymptomChecker';
+import SymptomChecker from '../../components/SymptomChecker';
 
 const AdvisorPage = () => {
   const [key, setKey] = useState(0);
